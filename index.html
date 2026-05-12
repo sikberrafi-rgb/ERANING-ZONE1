@@ -1,157 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Earn Zone</title>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Earn Zone Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial;
-    }
-
     body{
-      background:#f2f5f9;
-    }
-
-    /* HEADER */
-
-    .header{
+      margin:0;
+      font-family:Arial;
       background:linear-gradient(135deg,#11c5a3,#0d6efd);
-      color:white;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+
+    .login-box{
+      width:85%;
+      background:white;
       padding:25px;
-      border-bottom-left-radius:30px;
-      border-bottom-right-radius:30px;
+      border-radius:25px;
+      text-align:center;
+      box-shadow:0 5px 15px rgba(0,0,0,0.2);
     }
 
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
-
-    .profile{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .profile img{
-      width:50px;
-      height:50px;
-      border-radius:50%;
-      border:3px solid white;
-    }
-
-    .balance{
-      background:white;
+    h1{
       color:#11c5a3;
-      padding:8px 15px;
-      border-radius:20px;
-      font-weight:bold;
+      margin-bottom:25px;
     }
 
-    /* MENU */
-
-    .menu{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:12px;
-      margin-top:20px;
-    }
-
-    .menu-box{
-      background:white;
-      padding:15px;
-      border-radius:20px;
-      text-align:center;
-      box-shadow:0 4px 10px rgba(0,0,0,0.08);
-    }
-
-    .menu-box i{
-      font-size:28px;
-      margin-bottom:8px;
-    }
-
-    .menu-box p{
-      font-size:14px;
-      font-weight:bold;
-    }
-
-    /* CARD */
-
-    .card{
-      background:white;
-      margin:15px;
-      padding:18px;
-      border-radius:20px;
-      box-shadow:0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .card h3{
-      margin-bottom:15px;
-      color:#333;
-    }
-
-    /* TASK BUTTON */
-
-    .task-btn{
+    input{
       width:100%;
-      border:none;
       padding:14px;
-      margin-top:10px;
-      border-radius:12px;
-      color:white;
-      font-size:16px;
-      font-weight:bold;
-    }
-
-    .fb{
-      background:#1877f2;
-    }
-
-    .tk{
-      background:black;
-    }
-
-    /* WITHDRAW */
-
-    .withdraw button{
-      width:100%;
+      margin-top:12px;
       border:none;
-      padding:13px;
-      margin-top:10px;
+      background:#f2f2f2;
       border-radius:12px;
-      color:white;
       font-size:16px;
+    }
+
+    button{
+      width:100%;
+      padding:14px;
+      margin-top:15px;
+      border:none;
+      border-radius:12px;
+      background:#11c5a3;
+      color:white;
+      font-size:18px;
       font-weight:bold;
     }
 
-    .bkash{
-      background:#e2136e;
-    }
-
-    .nagad{
-      background:#ff6600;
-    }
-
-    .paypal{
-      background:#003087;
-    }
-
-    /* FOOTER */
-
-    .footer{
-      text-align:center;
-      padding:20px;
-      color:gray;
-      font-size:14px;
+    .signup{
+      background:#0d6efd;
     }
 
   </style>
@@ -159,133 +61,100 @@
 
 <body>
 
-  <!-- HEADER -->
+<div class="login-box">
 
-  <div class="header">
+  <h1>💰 Earn Zone</h1>
 
-    <div class="top">
+  <input type="email" id="email" placeholder="Enter Email">
 
-      <div class="profile">
-        <img src="https://i.ibb.co/4pDNDk1/avatar.png">
-        <div>
-          <h3>Rafi</h3>
-          <p>Welcome Back 👋</p>
-        </div>
-      </div>
+  <input type="password" id="password" placeholder="Enter Password">
 
-      <div class="balance">
-        ৳ 120
-      </div>
+  <button onclick="login()">LOGIN</button>
 
-    </div>
+  <button class="signup" onclick="signup()">CREATE ACCOUNT</button>
 
-    <!-- MENU -->
+</div>
 
-    <div class="menu">
+<script type="module">
 
-      <div class="menu-box">
-        <i class="fa-solid fa-bullhorn" style="color:#ff9800;"></i>
-        <p>Ads</p>
-      </div>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-      <div class="menu-box">
-        <i class="fa-solid fa-user-group" style="color:#11c5a3;"></i>
-        <p>Refer</p>
-      </div>
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-      <div class="menu-box">
-        <i class="fa-brands fa-facebook" style="color:#1877f2;"></i>
-        <p>FB Sell</p>
-      </div>
+const firebaseConfig = {
 
-      <div class="menu-box">
-        <i class="fa-solid fa-envelope" style="color:#ea4335;"></i>
-        <p>Gmail Sell</p>
-      </div>
+  apiKey: "AIzaSyBw2LPnbQ_T4wQxAT-J2iWcJs0jYA3F0so",
 
-      <div class="menu-box">
-        <i class="fa-solid fa-list-check" style="color:#4caf50;"></i>
-        <p>Task</p>
-      </div>
+  authDomain: "earnzone-39a95.firebaseapp.com",
 
-      <div class="menu-box">
-        <i class="fa-solid fa-wallet" style="color:#9c27b0;"></i>
-        <p>Withdraw</p>
-      </div>
+  projectId: "earnzone-39a95",
 
-    </div>
+  storageBucket: "earnzone-39a95.firebasestorage.app",
 
-  </div>
+  messagingSenderId: "217879766538",
 
-  <!-- TASK -->
+  appId: "1:217879766538:web:0cc3a449e387a97cbda1f3",
 
-  <div class="card">
+  measurementId: "G-LC9MGWYN1L"
 
-    <h3>📋 Daily Task</h3>
+};
 
-    <a href="https://www.facebook.com/profile.php?id=100095177704719">
-      <button class="task-btn fb">
-        Facebook Task Complete
-      </button>
-    </a>
+const app = initializeApp(firebaseConfig);
 
-    <a href="https://vm.tiktok.com/ZS9F4TMLa3jA5-ET2oD/">
-      <button class="task-btn tk">
-        TikTok Task Complete
-      </button>
-    </a>
+const auth = getAuth(app);
 
-    <p style="margin-top:12px;font-weight:bold;color:#11c5a3;">
-      Reward: 2 TK
-    </p>
+window.signup = function(){
 
-  </div>
+let email = document.getElementById("email").value;
 
-  <!-- REFERRAL -->
+let password = document.getElementById("password").value;
 
-  <div class="card">
+createUserWithEmailAndPassword(auth,email,password)
 
-    <h3>🎁 Referral Link</h3>
+.then(()=>{
 
-    <input type="text"
-    value="https://earnzone/ref123"
-    style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
+alert("Account Created Successfully");
 
-  </div>
+})
 
-  <!-- WITHDRAW -->
+.catch((error)=>{
 
-  <div class="card withdraw">
+alert(error.message);
 
-    <h3>💳 Withdraw Method</h3>
+});
 
-    <button class="bkash">bKash</button>
+}
 
-    <button class="nagad">Nagad</button>
+window.login = function(){
 
-    <button class="paypal">PayPal</button>
+let email = document.getElementById("email").value;
 
-  </div>
+let password = document.getElementById("password").value;
 
-  <!-- SUPPORT -->
+signInWithEmailAndPassword(auth,email,password)
 
-  <div class="card">
+.then(()=>{
 
-    <h3>🛠 Admin Support</h3>
+alert("Login Success");
 
-    <a href="https://t.me/yourtelegram">
-      <button class="task-btn" style="background:#229ED9;">
-        Contact Telegram
-      </button>
-    </a>
+window.location.href="home.html";
 
-  </div>
+})
 
-  <!-- FOOTER -->
+.catch((error)=>{
 
-  <div class="footer">
-    © 2026 Earn Zone - All Rights Reserved
-  </div>
+alert(error.message);
+
+});
+
+}
+
+</script>
 
 </body>
-  </html>
+</html>
