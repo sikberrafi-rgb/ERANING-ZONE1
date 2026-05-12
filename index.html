@@ -1,106 +1,203 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Earn Zone Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
+<title>Earn Zone Login</title>
 
-    body{
-      margin:0;
-      font-family:Arial;
-      background:linear-gradient(135deg,#11c5a3,#0d6efd);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-    }
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    .login-box{
-      width:85%;
-      background:white;
-      padding:25px;
-      border-radius:25px;
-      text-align:center;
-      box-shadow:0 5px 15px rgba(0,0,0,0.2);
-    }
+<style>
 
-    h1{
-      color:#11c5a3;
-      margin-bottom:25px;
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
 
-    input{
-      width:100%;
-      padding:14px;
-      margin-top:12px;
-      border:none;
-      background:#f2f2f2;
-      border-radius:12px;
-      font-size:16px;
-    }
+body{
+background:linear-gradient(135deg,#11c5a3,#0d6efd);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:15px;
+}
 
-    button{
-      width:100%;
-      padding:14px;
-      margin-top:15px;
-      border:none;
-      border-radius:12px;
-      background:#11c5a3;
-      color:white;
-      font-size:18px;
-      font-weight:bold;
-    }
+.login-box{
+width:100%;
+max-width:400px;
+background:white;
+padding:25px;
+border-radius:25px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
 
-    .signup{
-      background:#0d6efd;
-    }
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
 
-  </style>
+.logo i{
+font-size:60px;
+color:#11c5a3;
+margin-bottom:10px;
+}
+
+.logo h1{
+color:#11c5a3;
+}
+
+.input-box{
+position:relative;
+margin-top:15px;
+}
+
+.input-box i{
+position:absolute;
+left:15px;
+top:17px;
+color:#777;
+}
+
+input{
+width:100%;
+padding:14px 14px 14px 45px;
+border:none;
+background:#f2f2f2;
+border-radius:14px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+margin-top:15px;
+font-size:17px;
+font-weight:bold;
+color:white;
+}
+
+.login-btn{
+background:#11c5a3;
+}
+
+.signup-btn{
+background:#0d6efd;
+}
+
+.text{
+text-align:center;
+margin-top:15px;
+color:#666;
+font-size:14px;
+}
+
+</style>
 </head>
 
 <body>
 
 <div class="login-box">
 
-  <h1>💰 Earn Zone</h1>
+<div class="logo">
 
-  <input type="email" id="email" placeholder="Enter Email">
+<i class="fa-solid fa-wallet"></i>
 
-  <input type="password" id="password" placeholder="Enter Password">
+<h1>Earn Zone</h1>
 
-  <button onclick="login()">LOGIN</button>
+<p>Login & Earn Money</p>
 
-  <button class="signup" onclick="signup()">CREATE ACCOUNT</button>
+</div>
+
+<div class="input-box">
+
+<i class="fa-solid fa-phone"></i>
+
+<input type="number"
+id="number"
+placeholder="Enter Phone Number">
+
+</div>
+
+<div class="input-box">
+
+<i class="fa-solid fa-envelope"></i>
+
+<input type="email"
+id="email"
+placeholder="Enter Gmail">
+
+</div>
+
+<div class="input-box">
+
+<i class="fa-solid fa-lock"></i>
+
+<input type="password"
+id="password"
+placeholder="Enter Password">
+
+</div>
+
+<button class="login-btn"
+onclick="login()">
+
+LOGIN
+
+</button>
+
+<button class="signup-btn"
+onclick="signup()">
+
+CREATE ACCOUNT
+
+</button>
+
+<div class="text">
+
+One account stays logged in until logout
+
+</div>
 
 </div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
+
 getAuth,
 createUserWithEmailAndPassword,
 signInWithEmailAndPassword
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyBw2LPnbQ_T4wQxAT-J2iWcJs0jYA3F0so",
+apiKey: "AIzaSyBw2LPnbQ_T4wQxAT-J2iWcJs0jYA3F0so",
 
-  authDomain: "earnzone-39a95.firebaseapp.com",
+authDomain: "earnzone-39a95.firebaseapp.com",
 
-  projectId: "earnzone-39a95",
+projectId: "earnzone-39a95",
 
-  storageBucket: "earnzone-39a95.firebasestorage.app",
+storageBucket: "earnzone-39a95.firebasestorage.app",
 
-  messagingSenderId: "217879766538",
+messagingSenderId: "217879766538",
 
-  appId: "1:217879766538:web:0cc3a449e387a97cbda1f3",
+appId: "1:217879766538:web:0cc3a449e387a97cbda1f3",
 
-  measurementId: "G-LC9MGWYN1L"
+measurementId: "G-LC9MGWYN1L"
 
 };
 
@@ -108,37 +205,59 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
+/* AUTO LOGIN */
+
+if(localStorage.getItem("login")){
+
+window.location.href="home.html";
+
+}
+
+/* SIGNUP */
+
 window.signup = function(){
 
-let email = document.getElementById("email").value;
+let email =
+document.getElementById("email").value;
 
-let password = document.getElementById("password").value;
+let password =
+document.getElementById("password").value;
 
 createUserWithEmailAndPassword(auth,email,password)
 
 .then(()=>{
 
-alert("Account Created Successfully");
+localStorage.setItem("login","true");
+
+alert("Account Created");
+
+window.location.href="home.html";
 
 })
 
 .catch((error)=>{
 
-alert(error.message);
+alert("Firebase Error: " + error.message);
 
 });
 
 }
 
+/* LOGIN */
+
 window.login = function(){
 
-let email = document.getElementById("email").value;
+let email =
+document.getElementById("email").value;
 
-let password = document.getElementById("password").value;
+let password =
+document.getElementById("password").value;
 
 signInWithEmailAndPassword(auth,email,password)
 
 .then(()=>{
+
+localStorage.setItem("login","true");
 
 alert("Login Success");
 
@@ -148,7 +267,7 @@ window.location.href="home.html";
 
 .catch((error)=>{
 
-alert(error.message);
+alert("Firebase Error: " + error.message);
 
 });
 
