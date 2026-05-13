@@ -24,13 +24,14 @@ href="style.css">
 
 <div class="profile-area">
 
-<img src="logo.png">
+<img src="logo.png"
+style="width:60px;height:60px;border-radius:50%;">
 
 <div>
 
-<h2 id="username"></h2>we
+<h2 id="username"></h2>
 
-<p>Welcome earn point🤑 </p>
+<p>Welcome Back 👋</p>
 
 </div>
 
@@ -56,7 +57,8 @@ href="style.css">
 
 </div>
 
-<div class="menu-box">
+<div class="menu-box"
+onclick="openWithdraw()">
 
 <i class="fa-solid fa-wallet"></i>
 
@@ -78,16 +80,29 @@ href="style.css">
 
 <div class="card">
 
-<h3>📋 Daily Tasks</h3>
+<h3>📋Tasks</h3>
 
-<button class="task-btn fb"
+<a href="https://www.facebook.com/profile.php?id=100095177704719"
+
+target="_blank"
+
 onclick="addBalance()">
+
+<button class="task-btn fb">
 
 <i class="fa-brands fa-facebook"></i>
 
 Facebook Follow +5 TK
 
 </button>
+
+</a>
+
+<a href="https://vm.tiktok.com/ZS9FGsVVfw7Mc-O5wY8/"
+
+target="_blank"
+
+onclick="addBalance()">
 
 <button class="task-btn tk">
 
@@ -97,46 +112,7 @@ TikTok Follow +5 TK
 
 </button>
 
-<button class="task-btn yt">
-
-<i class="fa-brands fa-youtube"></i>
-
-YouTube Subscribe +5 TK
-
-</button>
-
-</div>
-
-<!-- WITHDRAW -->
-
-<div class="card">
-
-<h3>💳 Withdraw Request</h3>
-
-<select id="method">
-
-<option>bKash</option>
-
-<option>Nagad</option>
-
-<option>Rocket</option>
-
-</select>
-
-<input type="text"
-id="bkash"
-placeholder="Enter Account Number">
-
-<input type="number"
-id="amount"
-placeholder="Enter Withdraw Amount">
-
-<button class="withdraw-btn"
-onclick="withdraw()">
-
-Send Withdraw Request
-
-</button>
+</a>
 
 </div>
 
@@ -146,6 +122,10 @@ Send Withdraw Request
 
 <h3>🛠 Support Center</h3>
 
+<a href="https://t.me/+5PiZP-1R4-02Nzc1"
+
+target="_blank">
+
 <button class="support-btn">
 
 <i class="fa-brands fa-telegram"></i>
@@ -153,6 +133,75 @@ Send Withdraw Request
 Telegram Support
 
 </button>
+
+</a>
+
+</div>
+
+<!-- WITHDRAW POPUP -->
+
+<div id="withdrawPopup"
+
+style="
+
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+z-index:999;
+">
+
+<div style="
+
+background:white;
+width:90%;
+max-width:400px;
+margin:80px auto;
+padding:20px;
+border-radius:25px;
+">
+
+<h2>💳 Withdraw</h2>
+
+<select id="method"
+style="width:100%;padding:12px;margin-top:10px;border-radius:10px;">
+
+<option>bKash</option>
+<option>Nagad</option>
+<option>Rocket</option>
+
+</select>
+
+<input type="text"
+id="bkash"
+placeholder="Enter Number"
+
+style="width:100%;padding:12px;margin-top:10px;border-radius:10px;">
+
+<input type="number"
+id="amount"
+placeholder="Enter Amount"
+
+style="width:100%;padding:12px;margin-top:10px;border-radius:10px;">
+
+<button class="withdraw-btn"
+onclick="withdraw()">
+
+Send Request
+
+</button>
+
+<button class="logout"
+onclick="closeWithdraw()">
+
+Close
+
+</button>
+
+</div>
 
 </div>
 
@@ -177,7 +226,7 @@ Logout
 
 </div>
 
-<div>
+<div onclick="openWithdraw()">
 
 <i class="fa-solid fa-wallet"></i>
 
@@ -199,4 +248,4 @@ Logout
 src="app.js"></script>
 
 </body>
-               </html>
+  </html>
