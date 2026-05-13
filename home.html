@@ -1,108 +1,202 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Earn App</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<head>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Earn Zone</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet"
+href="style.css">
+
 </head>
 
-<body style="margin:0;font-family:Arial;background:linear-gradient(135deg,#11c5a3,#0d6efd);">
+<body>
 
-<!-- HEADER -->
-<div style="padding:25px;text-align:center;color:white;">
-  <h1>💰 Earn App</h1>
-  <p>Complete Task & Earn Money</p>
+<!-- TOP HEADER -->
+
+<div class="top-header">
+
+<div class="profile-area">
+
+<img src="logo.png">
+
+<div>
+
+<h2 id="username"></h2>we
+
+<p>Welcome earn point🤑 </p>
+
 </div>
 
-<!-- MAIN CARD -->
-<div style="background:white;margin:10px;border-radius:25px;padding:15px;">
+</div>
 
-  <!-- GRID MENU -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center;">
+<div class="balance-box">
 
-    <div style="background:#f5f5f5;padding:15px;border-radius:15px;">
-      <i class="fa-solid fa-bullhorn" style="font-size:30px;color:#ff9800;"></i>
-      <p>Ads</p>
-    </div>
+৳ <span id="balance">0</span>
 
-    <div style="background:#f5f5f5;padding:15px;border-radius:15px;">
-      <i class="fa-solid fa-users" style="font-size:30px;color:#11c5a3;"></i>
-      <p>Referral</p>
-    </div>
+</div>
 
-    <div style="background:#f5f5f5;padding:15px;border-radius:15px;">
-      <i class="fa-brands fa-facebook" style="font-size:30px;color:#1877f2;"></i>
-      <p>Facebook Sell</p>
-    </div>
+</div>
 
-    <div style="background:#f5f5f5;padding:15px;border-radius:15px;">
-      <i class="fa-solid fa-envelope" style="font-size:30px;color:#ea4335;"></i>
-      <p>Gmail Sell</p>
-    </div>
+<!-- MENU -->
 
-    <div style="background:#f5f5f5;padding:15px;border-radius:15px;">
-      <i class="fa-solid fa-list-check" style="font-size:30px;color:#4caf50;"></i>
-      <p>Task</p>
-    </div>
+<div class="main-menu">
 
-    <div style="background:#f5f5f5;padding:15px;border-radius:15px;">
-      <i class="fa-solid fa-wallet" style="font-size:30px;color:#9c27b0;"></i>
-      <p>Withdraw</p>
-    </div>
+<div class="menu-box">
 
-  </div>
+<i class="fa-solid fa-list-check"></i>
+
+<p>Tasks</p>
+
+</div>
+
+<div class="menu-box">
+
+<i class="fa-solid fa-wallet"></i>
+
+<p>Withdraw</p>
+
+</div>
+
+<div class="menu-box">
+
+<i class="fa-solid fa-user-group"></i>
+
+<p>Referral</p>
+
+</div>
 
 </div>
 
 <!-- TASK -->
-<div style="background:white;margin:10px;border-radius:25px;padding:15px;">
 
-  <h3>📋 Daily Task</h3>
+<div class="card">
 
-  <a href="https://www.facebook.com/profile.php?id=100095177704719" target="_blank">
-    <button style="width:100%;padding:12px;margin:5px 0;background:#1877f2;color:white;border:none;border-radius:10px;">
-      📘 Facebook Task
-    </button>
-  </a>
+<h3>📋 Daily Tasks</h3>
 
-  <a href="https://vm.tiktok.com/ZS9F4TMLa3jA5-ET2oD/" target="_blank">
-    <button style="width:100%;padding:12px;margin:5px 0;background:#000;color:white;border:none;border-radius:10px;">
-      🎵 TikTok Task
-    </button>
-  </a>
+<button class="task-btn fb"
+onclick="addBalance()">
 
-  <p>💰 Reward: 2 TK</p>
+<i class="fa-brands fa-facebook"></i>
 
-</div>
+Facebook Follow +5 TK
 
-<!-- REFERRAL -->
-<div style="background:white;margin:10px;border-radius:25px;padding:15px;">
+</button>
 
-  <h3>🎁 Referral Link</h3>
+<button class="task-btn tk">
 
-  <input type="text" value="https://yourapp.com/ref=123"
-  style="width:100%;padding:10px;text-align:center;border-radius:10px;border:1px solid #ccc;" readonly>
+<i class="fa-brands fa-tiktok"></i>
+
+TikTok Follow +5 TK
+
+</button>
+
+<button class="task-btn yt">
+
+<i class="fa-brands fa-youtube"></i>
+
+YouTube Subscribe +5 TK
+
+</button>
 
 </div>
 
 <!-- WITHDRAW -->
-<div style="background:white;margin:10px;border-radius:25px;padding:15px;">
 
-  <h3>💳 Withdraw</h3>
+<div class="card">
 
-  <button style="width:100%;padding:10px;margin:5px 0;background:#e91e63;color:white;border:none;border-radius:10px;">
-    bKash
-  </button>
+<h3>💳 Withdraw Request</h3>
 
-  <button style="width:100%;padding:10px;margin:5px 0;background:#ff5722;color:white;border:none;border-radius:10px;">
-    Nagad
-  </button>
+<select id="method">
 
-  <button style="width:100%;padding:10px;margin:5px 0;background:#003087;color:white;border:none;border-radius:10px;">
-    PayPal
-  </button>
+<option>bKash</option>
+
+<option>Nagad</option>
+
+<option>Rocket</option>
+
+</select>
+
+<input type="text"
+id="bkash"
+placeholder="Enter Account Number">
+
+<input type="number"
+id="amount"
+placeholder="Enter Withdraw Amount">
+
+<button class="withdraw-btn"
+onclick="withdraw()">
+
+Send Withdraw Request
+
+</button>
 
 </div>
 
+<!-- SUPPORT -->
+
+<div class="card">
+
+<h3>🛠 Support Center</h3>
+
+<button class="support-btn">
+
+<i class="fa-brands fa-telegram"></i>
+
+Telegram Support
+
+</button>
+
+</div>
+
+<!-- LOGOUT -->
+
+<button class="logout"
+onclick="logout()">
+
+Logout
+
+</button>
+
+<!-- BOTTOM MENU -->
+
+<div class="bottom-menu">
+
+<div>
+
+<i class="fa-solid fa-house active"></i>
+
+<p>Home</p>
+
+</div>
+
+<div>
+
+<i class="fa-solid fa-wallet"></i>
+
+<p>Wallet</p>
+
+</div>
+
+<div>
+
+<i class="fa-solid fa-user"></i>
+
+<p>Profile</p>
+
+</div>
+
+</div>
+
+<script type="module"
+src="app.js"></script>
+
 </body>
-</html>
+               </html>
