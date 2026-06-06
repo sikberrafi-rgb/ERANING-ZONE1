@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>👤 My Profile</h2>
+
+<img id="profilePic"
+src="logo.png"
+width="100">
+
+<br><br>
+
+<input type="file" id="photo">
+
+<br><br>
+
+<input type="text"
+id="newName"
+placeholder="Change Name">
+
+<button onclick="saveName()">
+Save Name
+</button>
+
+<h3 id="username"></h3>
+
+<p id="email"></p>
+
+<button onclick="logout()">
+Logout
+</button>
+
+</div>
+
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
