@@ -1,279 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Earn Zone Login</title>
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:linear-gradient(135deg,#11c5a3,#0d6efd);
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:15px;
-}
-
-.login-box{
-width:100%;
-max-width:400px;
-background:white;
-padding:25px;
-border-radius:25px;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo i{
-font-size:60px;
-color:#11c5a3;
-margin-bottom:10px;
-}
-
-.logo h1{
-color:#11c5a3;
-}
-
-.input-box{
-position:relative;
-margin-top:15px;
-}
-
-.input-box i{
-position:absolute;
-left:15px;
-top:17px;
-color:#777;
-}
-
-input{
-width:100%;
-padding:14px 14px 14px 45px;
-border:none;
-background:#f2f2f2;
-border-radius:14px;
-font-size:16px;
-}
-
-button{
-width:100%;
-padding:14px;
-border:none;
-border-radius:14px;
-margin-top:15px;
-font-size:17px;
-font-weight:bold;
-color:white;
-}
-
-.login-btn{
-background:#11c5a3;
-}
-
-.signup-btn{
-background:#0d6efd;
-}
-
-.text{
-text-align:center;
-margin-top:15px;
-color:#666;
-font-size:14px;
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EarnZone - Earn More, Live More</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-<div class="login-box">
-
-<div class="logo">
-
-<i class="fa-solid fa-wallet"></i>
-
-<h1>Earn Zone</h1>
-
-<p>Login & Earn Money</p>
-
-</div>
-
-<div class="input-box">
-
-<i class="fa-solid fa-phone"></i>
-
-<input type="number"
-id="number"
-placeholder="Enter Phone Number">
-
-</div>
-
-<div class="input-box">
-
-<i class="fa-solid fa-envelope"></i>
-
-<input type="email"
-id="email"
-placeholder="Enter Gmail">
-
-</div>
-
-<div class="input-box">
-
-<i class="fa-solid fa-lock"></i>
-
-<input type="password"
-id="password"
-placeholder="Enter Password">
-
-</div>
-
-<button class="login-btn"
-onclick="login()">
-
-LOGIN
-
-</button>
-
-<button class="signup-btn"
-onclick="signup()">
-
-CREATE ACCOUNT
-
-</button>
-
-<div class="text">
-
-One account stays logged in until logout
-
-</div>
-
-</div>
-
-<script type="module">
-
-import { initializeApp }
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyBw2LPnbQ_T4wQxAT-J2iWcJs0jYA3F0so",
-
-authDomain: "earnzone-39a95.firebaseapp.com",
-
-projectId: "earnzone-39a95",
-
-storageBucket: "earnzone-39a95.firebasestorage.app",
-
-messagingSenderId: "217879766538",
-
-appId: "1:217879766538:web:0cc3a449e387a97cbda1f3",
-
-measurementId: "G-LC9MGWYN1L"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-/* AUTO LOGIN */
-
-if(localStorage.getItem("login")){
-
-window.location.href="home.html";
-
-}
-
-/* SIGNUP */
-
-window.signup = function(){
-
-let email =
-document.getElementById("email").value;
-
-let password =
-document.getElementById("password").value;
-
-createUserWithEmailAndPassword(auth,email,password)
-
-.then(()=>{
-
-localStorage.setItem("login","true");
-
-alert("Account Created");
-
-window.location.href="home.html";
-
-})
-
-.catch((error)=>{
-
-alert("Firebase Error: " + error.message);
-
-});
-
-}
-
-/* LOGIN */
-
-window.login = function(){
-
-let email =
-document.getElementById("email").value;
-
-let password =
-document.getElementById("password").value;
-
-signInWithEmailAndPassword(auth,email,password)
-
-.then(()=>{
-
-localStorage.setItem("login","true");
-
-alert("Login Success");
-
-window.location.href="home.html";
-
-})
-
-.catch((error)=>{
-
-alert("Firebase Error: " + error.message);
-
-});
-
-}
-
-</script>
-
+  <div class="container">
+
+    <!-- Login Section -->
+    <div id="loginDiv" class="card">
+      <div class="header">
+        <img src="https://i.imgur.com/8pK2jZJ.png" alt="EarnZone Logo" class="logo">
+        <h1>EARNZONE</h1>
+        <p>Earn More, Live More</p>
+      </div>
+      <input type="email" id="loginEmail" placeholder="ইমেইল দিন">
+      <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন">
+      <button class="btn" onclick="login()">লগইন করুন</button>
+      <button class="btn btn-success" onclick="signup()">নতুন একাউন্ট খুলুন</button>
+      <p style="text-align:center;margin-top:15px;color:#94a3b8;font-size:14px">লাইভ ক্লাসে জয়েন করে ইনকাম শিখুন</p>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardDiv" class="hidden">
+      <div class="header">
+        <img src="https://i.imgur.com/8pK2jZJ.png" alt="EarnZone Logo" class="logo-small">
+        <h2>👋 স্বাগতম, <span id="userName"></span></h2>
+      </div>
+
+      <div class="card">
+        <p style="text-align:center;color:#94a3b8">আপনার ব্যালেন্স</p>
+        <div class="balance">৳<span id="userBalance">0</span></div>
+        <button class="btn btn-success" onclick="showPage('withdrawPage')">টাকা তুলুন</button>
+      </div>
+
+      <div class="nav">
+        <button class="nav-btn active" onclick="showPage('livePage')">📚 লাইভ ক্লাস</button>
+        <button class="nav-btn" onclick="showPage('leaderboardPage')">🏆 লিডারবোর্ড</button>
+        <button class="nav-btn" onclick="showPage('referPage')">👥 রেফার</button>
+        <button class="nav-btn" onclick="showPage('supportPage')">🛟 সাপোর্ট</button>
+      </div>
+
+      <!-- Live Class Page -->
+      <div id="livePage" class="card">
+        <h3>📚 লাইভ ক্লাস জয়েন করুন</h3>
+        <div class="task-item" style="background:#0ea5e9;border:none">
+          <h4>🔴 আজকের লাইভ ক্লাস</h4>
+          <p style="color:#e0f2fe">বিষয়: দৈনিক 500 টাকা ইনকাম করার সিক্রেট</p>
+          <p style="color:#e0f2fe">সময়: প্রতি রাত 9 টা</p>
+          <button class="btn" style="background:#fff;color:#0ea5e9;margin-top:10px" onclick="window.open('https://t.me/eraningzone5')">
+            Telegram এ জয়েন করুন
+          </button>
+        </div>
+        <button class="btn" onclick="openOfferwall()">🔥 ক্লাসের ফাঁকে ইনকাম - Offerwall</button>
+      </div>
+
+      <!-- Leaderboard Page -->
+      <div id="leaderboardPage" class="card hidden">
+        <h3>🏆 টপ 10 আর্নার</h3>
+        <div id="leaderboardList"><p>লোড হচ্ছে...</p></div>
+      </div>
+
+      <!-- Refer Page -->
+      <div id="referPage" class="card hidden">
+        <h3>👥 রেফার করে ইনকাম</h3>
+        <p>প্রতি এক্টিভ রেফারে 20 টাকা বোনাস</p>
+        <input type="text" id="myReferCode" readonly>
+        <button class="btn" onclick="copyReferCode()">কোড কপি করুন</button>
+        <h4 style="margin-top:20px">🎁 Gift Code</h4>
+        <input type="text" id="giftCodeInput" placeholder="Gift Code লিখুন">
+        <button class="btn btn-success" onclick="redeemGiftCode()">রিডিম করুন</button>
+      </div>
+
+      <!-- Support Page -->
+      <div id="supportPage" class="card hidden">
+        <h3>🛟 সাপোর্ট সেন্টার</h3>
+        <button class="btn" onclick="window.open('https://t.me/eraningzone5')">📢 Telegram চ্যানেল</button>
+        <button class="btn" onclick="window.open('https://t.me/eraningzone14')">💬 Telegram Admin</button>
+        <button class="btn" style="background:#1877f2" onclick="window.open('https://www.facebook.com/profile.php?id=100095177704719&mibextid=ZbWKwL')">📘 Facebook পেজ</button>
+        <button class="btn" style="background:#1877f2" onclick="window.open('https://m.me/100095177704719')">💬 Messenger সাপোর্ট</button>
+        <div class="task-item" style="margin-top:15px">
+          <p style="color:#94a3b8;font-size:14px">⏰ সাপোর্ট: সকাল 10 টা - রাত 10 টা</p>
+        </div>
+      </div>
+
+      <!-- Withdraw Page -->
+      <div id="withdrawPage" class="card hidden">
+        <h3>💸 টাকা তুলুন</h3>
+        <p style="color:#f59e0b">⚠️ আয় 7 দিন পর উত্তোলনযোগ্য | মিনিমাম 100 টাকা</p>
+        <input type="number" id="withdrawAmount" placeholder="টাকার পরিমাণ">
+        <input type="text" id="bkashNumber" placeholder="বিকাশ নাম্বার">
+        <button class="btn btn-success" onclick="requestWithdraw()">Withdraw রিকোয়েস্ট</button>
+        <button class="btn" onclick="showPage('livePage')">ব্যাক</button>
+      </div>
+
+      <button class="btn btn-danger" onclick="logout()">🚪 লগআউট</button>
+    </div>
+
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="app.js"></script>
 </body>
-</html>
+          </html>
