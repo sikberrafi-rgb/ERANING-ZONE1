@@ -1,187 +1,181 @@
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-signOut
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+// Firebase Config - তোমারটা বসানো আছে
 const firebaseConfig = {
-
-apiKey: "AIzaSyBw2LPnbQ_T4wQxAT-J2iWcJs0jYA3F0so",
-
-authDomain: "earnzone-39a95.firebaseapp.com",
-
-projectId: "earnzone-39a95",
-
-storageBucket: "earnzone-39a95.firebasestorage.app",
-
-messagingSenderId: "217879766538",
-
-appId: "1:217879766538:web:0cc3a449e387a97cbda1f3",
-
-measurementId: "G-LC9MGWYN1L"
-
+  apiKey: "AIzaSyDFFx13m5qHDf2UnhAeedbQNQCt50vV668",
+  authDomain: "eraning-zone-3c6f6.firebaseapp.com",
+  projectId: "eraning-zone-3c6f6",
+  storageBucket: "eraning-zone-3c6f6.firebasestorage.app",
+  messagingSenderId: "936778556193",
+  appId: "1:936778556193:web:a03b5d3c2c2b7506b25460"
 };
 
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser = null;
 
-const auth = getAuth(app);
-
-/* AUTO LOGIN */
-
-if(localStorage.getItem("login")){
-
-if(window.location.pathname.includes("index.html")){
-
-window.location.href = "home.html";
-
-}
-
-}
-
-/* SIGNUP */
-
-window.signup = function(){
-
-let email =
-document.getElementById("email").value;
-
-let password =
-document.getElementById("password").value;
-
-createUserWithEmailAndPassword(auth,email,password)
-
-.then((userCredential)=>{
-
-localStorage.setItem("login","true");
-
-localStorage.setItem(
-"username",
-email
-);
-
-alert("Account Created Successfully");
-
-window.location.href="home.html";
-
-})
-
-.catch((error)=>{
-
-alert(error.message);
-
+// ইউজার লগইন চেক
+auth.onAuthStateChanged(async user => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('loginDiv').classList.add('hidden');
+    document.getElementById('dashboardDiv').classList.remove('hidden');
+    loadUserData();
+    loadLeaderboard();
+  } else {
+    document.getElementById('loginDiv').classList.remove('hidden');
+    document.getElementById('dashboardDiv').classList.add('hidden');
+  }
 });
 
+// সাইনআপ
+async function signup() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const refCode = document.getElementById('referralCode').value;
+  if(!email ||!password) return alert('Email Password দাও');
+  if(password.length < 6) return alert('পাসওয়ার্ড কমপক্ষে 6 অক্ষর');
+
+  try {
+    const userCred = await auth.createUserWithEmailAndPassword(email, password);
+    const myRefCode = email.split('@')[0].toUpperCase() + Math.floor(Math.random()*1000);
+
+    await db.collection("users").doc(userCred.user.uid).set({
+      name: email.split('@')[0],
+      email: email,
+      balance: 0,
+      totalEarn: 0,
+      referralCode: myRefCode,
+      referredBy: refCode || null,
+      joinedDate: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    // রেফার বোনাস
+    if(refCode) {
+      const refUser = await db.collection("users").where("referralCode", "==", refCode).get();
+      if(!refUser.empty) {
+        await db.collection("users").doc(refUser.docs[0].id).update({
+          balance: firebase.firestore.FieldValue.increment(20),
+          totalEarn: firebase.firestore.FieldValue.increment(20)
+        });
+      }
+    }
+    alert('Signup Success! 20 টাকা রেফার বোনাস পেয়েছো');
+  } catch(e) { alert(e.message); }
 }
 
-/* LOGIN */
-
-window.login = function(){
-
-let email =
-document.getElementById("email").value;
-
-let password =
-document.getElementById("password").value;
-
-signInWithEmailAndPassword(auth,email,password)
-
-.then(()=>{
-
-localStorage.setItem("login","true");
-
-localStorage.setItem(
-"username",
-email
-);
-
-alert("Login Success");
-
-window.location.href="home.html";
-
-})
-
-.catch((error)=>{
-
-alert(error.message);
-
-});
-
+// লগইন
+function login() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  auth.signInWithEmailAndPassword(email, password).catch(e => alert(e.message));
 }
 
-/* LOGOUT */
+// লগআউট
+function logout() { auth.signOut(); }
 
-window.logout = function(){
-
-localStorage.removeItem("login");
-
-localStorage.removeItem("username");
-
-signOut(auth).then(()=>{
-
-window.location.href="index.html";
-
-});
-
+// ইউজার ডাটা লোড
+async function loadUserData() {
+  const doc = await db.collection("users").doc(currentUser.uid).get();
+  const data = doc.data();
+  document.getElementById('userName').innerText = data.name;
+  document.getElementById('userBalance').innerText = data.balance;
+  document.getElementById('myReferCode').value = data.referralCode;
 }
 
-/* USER NAME SHOW */
+// পেজ শো
+function showPage(pageId) {
+  ['livePage','leaderboardPage','referPage','supportPage','withdrawPage'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.add('hidden');
+  });
+  const el = document.getElementById(pageId);
+  if(el) el.classList.remove('hidden');
 
-if(document.getElementById("username")){
-
-document.getElementById("username").innerText =
-
-localStorage.getItem("username");
-
+  // Active বাটন
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
 }
 
-/* ADD BALANCE */
-
-window.addBalance = function(){
-
-let balance =
-document.getElementById("balance");
-
-let current =
-parseInt(balance.innerText);
-
-balance.innerText = current + 5;
-
-alert("5 TK Added");
-
+// রেফার কোড কপি
+function copyReferCode() {
+  document.getElementById('myReferCode').select();
+  document.execCommand('copy');
+  alert('রেফার কোড কপি হয়েছে!');
 }
 
-/* WITHDRAW */
+// Offerwall খোলা
+function openOfferwall() {
+  window.open(`https://www.cpagrip.com/offerwall.php?user_id=${currentUser.uid}`, '_blank');
+}
 
-window.withdraw = function(){
+// লিডারবোর্ড লোড
+async function loadLeaderboard() {
+  const users = await db.collection("users").orderBy("totalEarn", "desc").limit(10).get();
+  let html = '';
+  let rank = 1;
+  users.forEach(doc => {
+    const data = doc.data();
+    html += `<div class="task-item"><p><b>${rank}. ${data.name}</b> - ৳${data.totalEarn || 0}</p></div>`;
+    rank++;
+  });
+  document.getElementById('leaderboardList').innerHTML = html || '<p>কেউ নাই এখনো</p>';
+}
 
-let number =
-document.getElementById("bkash").value;
+// Gift Code রিডিম
+async function redeemGiftCode() {
+  const code = document.getElementById('giftCodeInput').value.trim();
+  if(!code) return alert('Gift Code লিখো');
 
-let amount =
-document.getElementById("amount").value;
+  const giftDoc = await db.collection("giftCodes").doc(code).get();
+  if(!giftDoc.exists) return alert('ভুল Gift Code');
+  if(giftDoc.data().used) return alert('এই কোড আগেই ব্যবহার হয়েছে');
 
-let method =
-document.getElementById("method").value;
+  const amount = giftDoc.data().amount;
+  await db.collection("users").doc(currentUser.uid).update({
+    balance: firebase.firestore.FieldValue.increment(amount),
+    totalEarn: firebase.firestore.FieldValue.increment(amount)
+  });
+  await db.collection("giftCodes").doc(code).update({used: true, usedBy: currentUser.email});
 
-alert(
+  alert(`${amount} টাকা পেয়েছো!`);
+  loadUserData();
+  document.getElementById('giftCodeInput').value = '';
+}
 
-"Withdraw Request Sent\n\nMethod: "
-+ method +
+// Withdraw রিকোয়েস্ট - বিকাশ/নগদ
+async function requestWithdraw() {
+  const amount = parseInt(document.getElementById("withdrawAmount").value);
+  const method = document.getElementById("paymentMethod").value;
+  const number = document.getElementById("paymentNumber").value;
 
-"\nNumber: "
-+ number +
+  const userDoc = await db.collection("users").doc(currentUser.uid).get();
+  const userData = userDoc.data();
 
-"\nAmount: "
-+ amount
+  if(!amount || amount < 100) return alert("মিনিমাম 100 টাকা লাগবে");
+  if(!method) return alert("বিকাশ নাকি নগদ সিলেক্ট করুন");
+  if(!number || number.length!== 11) return alert("সঠিক 11 ডিজিট নাম্বার দিন");
+  if(userData.balance < amount) return alert("ব্যালেন্স কম আছে");
 
-);
+  // Firebase এ সেভ
+  await db.collection("withdrawRequests").add({
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    userName: userData.name,
+    amount: amount,
+    method: method,
+    number: number,
+    status: "pending",
+    requestDate: firebase.firestore.FieldValue.serverTimestamp()
+  });
 
+  // ব্যালেন্স কাটো
+  await db.collection("users").doc(currentUser.uid).update({
+    balance: firebase.firestore.FieldValue.increment(-amount)
+  });
+
+  alert(`Withdraw রিকোয়েস্ট পেন্ডিং! ${amount} টাকা ${method} নাম্বার ${number} এ 24 ঘন্টায় পাবেন`);
+  loadUserData();
+  document.getElementById("withdrawAmount").value = "";
+  document.getElementById("paymentMethod").value = "";
+  document.getElementById("paymentNumber").value = "";
 }
