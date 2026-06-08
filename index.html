@@ -1,124 +1,112 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EarnZone - Earn More, Live More</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <!-- Login Section -->
-    <div id="loginDiv" class="card">
-      <div class="header">
-        <img src="https://i.postimg.cc/8PqXqYzJ/earnzone-logo.png" alt="EarnZone Logo" class="logo">
-        <h1>EARNZONE</h1>
-        <p>Earn More, Live More</p>
-      </div>
-      <input type="email" id="loginEmail" placeholder="ইমেইল দিন">
-      <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন">
-      <input type="text" id="referralCode" placeholder="রেফার কোড (যদি থাকে)">
-      <button class="btn" onclick="login()">লগইন করুন</button>
-      <button class="btn btn-success" onclick="signup()">নতুন একাউন্ট খুলুন</button>
-      <p style="text-align:center;margin-top:15px;color:#94a3b8;font-size:14px">লাইভ ক্লাসে জয়েন করে ইনকাম শিখুন</p>
-    </div>
-
-    <!-- Dashboard Section -->
-    <div id="dashboardDiv" class="hidden">
-      <div class="header">
-        <img src="https://i.postimg.cc/8PqXqYzJ/earnzone-logo.png" alt="EarnZone Logo" class="logo-small">
-        <h2>👋 স্বাগতম, <span id="userName"></span></h2>
-      </div>
-      <div class="card">
-        <p style="text-align:center;color:#94a3b8">আপনার ব্যালেন্স</p>
-        <div class="balance">৳<span id="userBalance">0</span></div>
-        <button class="btn btn-success" onclick="showPage('withdrawPage')">টাকা তুলুন</button>
-      </div>
-      <div class="nav">
-        <button class="nav-btn active" onclick="showPage('livePage')">📚 লাইভ ক্লাস</button>
-        <button class="nav-btn" onclick="showPage('leaderboardPage')">🏆 লিডারবোর্ড</button>
-        <button class="nav-btn" onclick="showPage('referPage')">👥 রেফার</button>
-        <button class="nav-btn" onclick="showPage('supportPage')">🛟 সাপোর্ট</button>
-      </div>
-
-      <!-- Live Class Page -->
-      <div id="livePage" class="card">
-        <h3>📚 লাইভ ক্লাস জয়েন করুন</h3>
-        <div class="task-item" style="background:#0ea5e9;border:none">
-          <h4>🔴 আজকের লাইভ ক্লাস</h4>
-          <p style="color:#e0f2fe">বিষয়: দৈনিক 500 টাকা ইনকাম করার সিক্রেট</p>
-          <p style="color:#e0f2fe">সময়: প্রতি রাত 9 টা</p>
-          <button class="btn" style="background:#fff;color:#0ea5e9;margin-top:10px" onclick="window.open('https://t.me/eraningzone5')"> Telegram এ জয়েন করুন </button>
-        </div>
-        <button class="btn" onclick="openOfferwall()">🔥 ক্লাসের ফাঁকে ইনকাম - Offerwall</button>
-      </div>
-
-      <!-- Leaderboard Page -->
-      <div id="leaderboardPage" class="card hidden">
-        <h3>🏆 টপ 10 আর্নার</h3>
-        <div id="leaderboardList"><p>লোড হচ্ছে...</p></div>
-      </div>
-
-      <!-- Refer Page -->
-      <div id="referPage" class="card hidden">
-        <h3>👥 রেফার করে ইনকাম</h3>
-        <p>প্রতি এক্টিভ রেফারে 20 টাকা বোনাস</p>
-        <input type="text" id="myReferCode" readonly>
-        <button class="btn" onclick="copyReferCode()">কোড কপি করুন</button>
-        <h4 style="margin-top:20px">🎁 Gift Code</h4>
-        <input type="text" id="giftCodeInput" placeholder="Gift Code লিখুন">
-        <button class="btn btn-success" onclick="redeemGiftCode()">রিডিম করুন</button>
-      </div>
-
-      <!-- Support Page -->
-      <div id="supportPage" class="card hidden">
-        <h3>🛟 সাপোর্ট সেন্টার</h3>
-        <button class="btn" onclick="window.open('https://t.me/eraningzone5')">📢 Telegram চ্যানেল</button>
-        <button class="btn" onclick="window.open('https://t.me/eraningzone14')">💬 Telegram Admin</button>
-        <button class="btn" style="background:#1877f2" onclick="window.open('https://www.facebook.com/profile.php?id=100095177704719&mibextid=ZbWKwL')">📘 Facebook পেজ</button>
-        <button class="btn" style="background:#1877f2" onclick="window.open('https://m.me/100095177704719')">💬 Messenger সাপোর্ট</button>
-        <div class="task-item" style="margin-top:15px">
-          <p style="color:#94a3b8;font-size:14px">⏰ সাপোর্ট: সকাল 10 টা - রাত 10 টা</p>
-        </div>
-      </div>
-
-      <!-- Withdraw Page - বিকাশ + নগদ -->
-      <div id="withdrawPage" class="card hidden">
-        <h3>💸 টাকা তুলুন</h3>
-        <p style="color:#f59e0b">⚠️ আয় 7 দিন পর উত্তোলনযোগ্য | মিনিমাম 100 টাকা</p>
-        
-        <input type="number" id="withdrawAmount" placeholder="টাকার পরিমাণ">
-        
-        <select id="paymentMethod" style="width:100%;padding:10px;margin:5px 0;border-radius:5px;border:1px solid #334155;background:#0f172a;color:white;box-sizing:border-box;">
-          <option value="">পেমেন্ট মেথড সিলেক্ট করুন</option>
-          <option value="bkash">বিকাশ</option>
-          <option value="nagad">নগদ</option>
-        </select>
-        
-        <input type="text" id="paymentNumber" placeholder="বিকাশ/নগদ নাম্বার">
-        
-        <button class="btn btn-success" onclick="requestWithdraw()">Withdraw রিকোয়েস্ট</button>
-        <button class="btn" onclick="showPage('livePage')">ব্যাক</button>
-      </div>
-      <button class="btn btn-danger" onclick="logout()">🚪 লগআউট</button>
-    </div>
-  </div>
-
-  <!-- Firebase Scripts + Config -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFFx13m5qHDf2UnhAeedbQNQCt50vV668",
-      authDomain: "eraning-zone-3c6f6.firebaseapp.com",
-      projectId: "eraning-zone-3c6f6",
-      storageBucket: "eraning-zone-3c6f6.firebasestorage.app",
-      messagingSenderId: "936778556193",
-      appId: "1:936778556193:web:a03b5d3c2c2b7506b25460"
-    };
-    firebase.initializeApp(firebaseConfig);
-  </script>
-  <script src="app.js"></script>
-</body>
+<!DOCTYPE html> 
+<html lang="bn"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>EarnZone - Earn More, Live More</title> 
+<link rel="stylesheet" href="style.css"> 
+</head> 
+<body> 
+<div class="container"> 
+<!-- Login Section --> 
+<div id="loginDiv" class="card"> 
+<div class="header"> 
+<img src="logo.png" alt="EarnZone Logo" class="logo"> 
+<h1>EARNZONE</h1> 
+<p>Earn More, Live More</p> 
+</div> 
+<input type="email" id="loginEmail" placeholder="ইমেইল দিন"> 
+<input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন"> 
+<input type="text" id="referralCode" placeholder="রেফার কোড (যদি থাকে)"> 
+<button class="btn" onclick="login()">লগইন করুন</button> 
+<button class="btn btn-success" onclick="signup()">নতুন একাউন্ট খুলুন</button> 
+<p style="text-align:center;margin-top:15px;color:#94a3b8;font-size:14px">লাইভ ক্লাসে জয়েন করে ইনকাম শিখুন</p> 
+</div> 
+<!-- Dashboard Section --> 
+<div id="dashboardDiv" class="hidden"> 
+<div class="header"> 
+<img src="logo.png" alt="EarnZone Logo" class="logo-small"> 
+<h2>👋 স্বাগতম, <span id="userName"></span></h2> 
+</div> 
+<div class="card"> 
+<p style="text-align:center;color:#94a3b8">আপনার ব্যালেন্স</p> 
+<div class="balance">৳<span id="userBalance">0</span></div> 
+<button class="btn btn-success" onclick="showPage('withdrawPage')">টাকা তুলুন</button> 
+</div> 
+<div class="nav"> 
+<button class="nav-btn active" onclick="showPage('livePage')">📚 লাইভ ক্লাস</button> 
+<button class="nav-btn" onclick="showPage('leaderboardPage')">🏆 লিডারবোর্ড</button> 
+<button class="nav-btn" onclick="showPage('referPage')">👥 রেফার</button> 
+<button class="nav-btn" onclick="showPage('supportPage')">🛟 সাপোর্ট</button> 
+</div> 
+<!-- Live Class Page --> 
+<div id="livePage" class="card"> 
+<h3>📚 লাইভ ক্লাস জয়েন করুন</h3> 
+<div class="task-item" style="background:#0ea5e9;border:none"> 
+<h4>🔴 আজকের লাইভ ক্লাস</h4> 
+<p style="color:#e0f2fe">বিষয়: দৈনিক 500 টাকা ইনকাম করার সিক্রেট</p> 
+<p style="color:#e0f2fe">সময়: প্রতি রাত 9 টা</p> 
+<button class="btn" style="background:#fff;color:#0ea5e9;margin-top:10px" onclick="window.open('https://t.me/eraningzone5')"> Telegram এ জয়েন করুন </button> 
+</div> 
+<button class="btn" onclick="openOfferwall()">🔥 ক্লাসের ফাঁকে ইনকাম - Offerwall</button> 
+</div> 
+<!-- Leaderboard Page --> 
+<div id="leaderboardPage" class="card hidden"> 
+<h3>🏆 টপ 10 আর্নার</h3> 
+<div id="leaderboardList"><p>লোড হচ্ছে...</p></div> 
+</div> 
+<!-- Refer Page --> 
+<div id="referPage" class="card hidden"> 
+<h3>👥 রেফার করে ইনকাম</h3> 
+<p>প্রতি এক্টিভ রেফারে 20 টাকা বোনাস</p> 
+<input type="text" id="myReferCode" readonly> 
+<button class="btn" onclick="copyReferCode()">কোড কপি করুন</button> 
+<h4 style="margin-top:20px">🎁 Gift Code</h4> 
+<input type="text" id="giftCodeInput" placeholder="Gift Code লিখুন"> 
+<button class="btn btn-success" onclick="redeemGiftCode()">রিডিম করুন</button> 
+</div> 
+<!-- Support Page --> 
+<div id="supportPage" class="card hidden"> 
+<h3>🛟 সাপোর্ট সেন্টার</h3> 
+<button class="btn" onclick="window.open('https://t.me/eraningzone5')">📢 Telegram চ্যানেল</button> 
+<button class="btn" onclick="window.open('https://t.me/eraningzone14')">💬 Telegram Admin</button> 
+<button class="btn" style="background:#1877f2" onclick="window.open('https://www.facebook.com/profile.php?id=100095177704719&mibextid=ZbWKwL')">📘 Facebook পেজ</button> 
+<button class="btn" style="background:#1877f2" onclick="window.open('https://m.me/100095177704719')">💬 Messenger সাপোর্ট</button> 
+<div class="task-item" style="margin-top:15px"> 
+<p style="color:#94a3b8;font-size:14px">⏰ সাপোর্ট: সকাল 10 টা - রাত 10 টা</p> 
+</div> 
+</div> 
+<!-- Withdraw Page - বিকাশ + নগদ আপডেট --> 
+<div id="withdrawPage" class="card hidden"> 
+<h3>💸 টাকা তুলুন</h3> 
+<p style="color:#f59e0b">⚠️ আয় 7 দিন পর উত্তোলনযোগ্য | মিনিমাম 100 টাকা</p> 
+<input type="number" id="withdrawAmount" placeholder="টাকার পরিমাণ"> 
+<select id="paymentMethod" style="width:100%;padding:10px;margin:5px 0;border-radius:5px;border:1px solid #334155;background:#0f172a;color:white;box-sizing:border-box;"> 
+<option value="">পেমেন্ট মেথড সিলেক্ট করুন</option> 
+<option value="bkash">বিকাশ</option> 
+<option value="nagad">নগদ</option> 
+</select> 
+<input type="text" id="paymentNumber" placeholder="বিকাশ/নগদ নাম্বার"> 
+<button class="btn btn-success" onclick="requestWithdraw()">Withdraw রিকোয়েস্ট</button> 
+<button class="btn" onclick="showPage('livePage')">ব্যাক</button> 
+</div> 
+<button class="btn btn-danger" onclick="logout()">🚪 লগআউট</button> 
+</div> 
+<!-- Firebase Scripts + Config --> 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script> 
+<script> 
+const firebaseConfig = { 
+  apiKey: "AIzaSyDFFx13m5qHDf2UnhAeedbQNQCt50vV668", 
+  authDomain: "eraning-zone-3c6f6.firebaseapp.com", 
+  projectId: "eraning-zone-3c6f6", 
+  storageBucket: "eraning-zone-3c6f6.firebasestorage.app", 
+  messagingSenderId: "936778556193", 
+  appId: "1:936778556193:web:a03b5d3c2c2b7506b25460" 
+}; 
+firebase.initializeApp(firebaseConfig); 
+</script> 
+<script src="app.js"></script> 
+</body> 
   </html>
