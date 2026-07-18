@@ -1,20 +1,37 @@
-// Firebase Config - তোমারটা বসানো আছে
-const firebaseConfig = {
-  apiKey: "AIzaSyDFFx13m5qHDf2UnhAeedbQNQCt50vV668",
-  authDomain: "eraning-zone-3c6f6.firebaseapp.com",
-  projectId: "eraning-zone-3c6f6",
-  storageBucket: "eraning-zone-3c6f6.firebasestorage.app",
-  messagingSenderId: "936778556193",
-  appId: "1:936778556193:web:a03b5d3c2c2b7506b25460"
-};
+// Firebase - Modular v12.16.0
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  increment
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+// এগুলা index.html এর window থেকে নিবে
+const auth = window.firebaseAuth;
+const db = window.firebaseDB;
+
 let currentUser = null;
 
 // ইউজার লগইন চেক
-auth.onAuthStateChanged(async user => {
+onAuthStateChanged(auth, async user => {
   if (user) {
     currentUser = user;
     document.getElementById('loginDiv').classList.add('hidden');
@@ -36,47 +53,53 @@ async function signup() {
   if(password.length < 6) return alert('পাসওয়ার্ড কমপক্ষে 6 অক্ষর');
 
   try {
-    const userCred = await auth.createUserWithEmailAndPassword(email, password);
+    const userCred = await createUserWithEmailAndPassword(auth, email, password);
     const myRefCode = email.split('@')[0].toUpperCase() + Math.floor(Math.random()*1000);
 
-    await db.collection("users").doc(userCred.user.uid).set({
+    await setDoc(doc(db, "users", userCred.user.uid), {
       name: email.split('@')[0],
       email: email,
       balance: 0,
       totalEarn: 0,
       referralCode: myRefCode,
       referredBy: refCode || null,
-      joinedDate: firebase.firestore.FieldValue.serverTimestamp()
+      joinedDate: serverTimestamp()
     });
 
     // রেফার বোনাস
     if(refCode) {
-      const refUser = await db.collection("users").where("referralCode", "==", refCode).get();
+      const q = query(collection(db, "users"), where("referralCode", "==", refCode));
+      const refUser = await getDocs(q);
       if(!refUser.empty) {
-        await db.collection("users").doc(refUser.docs[0].id).update({
-          balance: firebase.firestore.FieldValue.increment(20),
-          totalEarn: firebase.firestore.FieldValue.increment(20)
+        const refUserId = refUser.docs[0].id;
+        await updateDoc(doc(db, "users", refUserId), {
+          balance: increment(20),
+          totalEarn: increment(20)
         });
       }
     }
     alert('Signup Success! 20 টাকা রেফার বোনাস পেয়েছো');
-  } catch(e) { alert(e.message); }
+  } catch(e) {
+    alert(e.message);
+  }
 }
 
 // লগইন
 function login() {
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
-  auth.signInWithEmailAndPassword(email, password).catch(e => alert(e.message));
+  signInWithEmailAndPassword(auth, email, password).catch(e => alert(e.message));
 }
 
 // লগআউট
-function logout() { auth.signOut(); }
+function logout() {
+  signOut(auth);
+}
 
 // ইউজার ডাটা লোড
 async function loadUserData() {
-  const doc = await db.collection("users").doc(currentUser.uid).get();
-  const data = doc.data();
+  const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+  const data = docSnap.data();
   document.getElementById('userName').innerText = data.name;
   document.getElementById('userBalance').innerText = data.balance;
   document.getElementById('myReferCode').value = data.referralCode;
@@ -93,7 +116,7 @@ function showPage(pageId) {
 
   // Active বাটন
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
+  if(window.event) window.event.target.classList.add('active');
 }
 
 // রেফার কোড কপি
@@ -110,7 +133,8 @@ function openOfferwall() {
 
 // লিডারবোর্ড লোড
 async function loadLeaderboard() {
-  const users = await db.collection("users").orderBy("totalEarn", "desc").limit(10).get();
+  const q = query(collection(db, "users"), orderBy("totalEarn", "desc"), limit(10));
+  const users = await getDocs(q);
   let html = '';
   let rank = 1;
   users.forEach(doc => {
@@ -125,18 +149,16 @@ async function loadLeaderboard() {
 async function redeemGiftCode() {
   const code = document.getElementById('giftCodeInput').value.trim();
   if(!code) return alert('Gift Code লিখো');
-
-  const giftDoc = await db.collection("giftCodes").doc(code).get();
-  if(!giftDoc.exists) return alert('ভুল Gift Code');
+  const giftDoc = await getDoc(doc(db, "giftCodes", code));
+  if(!giftDoc.exists()) return alert('ভুল Gift Code');
   if(giftDoc.data().used) return alert('এই কোড আগেই ব্যবহার হয়েছে');
 
   const amount = giftDoc.data().amount;
-  await db.collection("users").doc(currentUser.uid).update({
-    balance: firebase.firestore.FieldValue.increment(amount),
-    totalEarn: firebase.firestore.FieldValue.increment(amount)
+  await updateDoc(doc(db, "users", currentUser.uid), {
+    balance: increment(amount),
+    totalEarn: increment(amount)
   });
-  await db.collection("giftCodes").doc(code).update({used: true, usedBy: currentUser.email});
-
+  await updateDoc(doc(db, "giftCodes", code), {used: true, usedBy: currentUser.email});
   alert(`${amount} টাকা পেয়েছো!`);
   loadUserData();
   document.getElementById('giftCodeInput').value = '';
@@ -147,8 +169,7 @@ async function requestWithdraw() {
   const amount = parseInt(document.getElementById("withdrawAmount").value);
   const method = document.getElementById("paymentMethod").value;
   const number = document.getElementById("paymentNumber").value;
-
-  const userDoc = await db.collection("users").doc(currentUser.uid).get();
+  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
   const userData = userDoc.data();
 
   if(!amount || amount < 100) return alert("মিনিমাম 100 টাকা লাগবে");
@@ -157,7 +178,7 @@ async function requestWithdraw() {
   if(userData.balance < amount) return alert("ব্যালেন্স কম আছে");
 
   // Firebase এ সেভ
-  await db.collection("withdrawRequests").add({
+  await addDoc(collection(db, "withdrawRequests"), {
     userId: currentUser.uid,
     userEmail: currentUser.email,
     userName: userData.name,
@@ -165,12 +186,12 @@ async function requestWithdraw() {
     method: method,
     number: number,
     status: "pending",
-    requestDate: firebase.firestore.FieldValue.serverTimestamp()
+    requestDate: serverTimestamp()
   });
 
   // ব্যালেন্স কাটো
-  await db.collection("users").doc(currentUser.uid).update({
-    balance: firebase.firestore.FieldValue.increment(-amount)
+  await updateDoc(doc(db, "users", currentUser.uid), {
+    balance: increment(-amount)
   });
 
   alert(`Withdraw রিকোয়েস্ট পেন্ডিং! ${amount} টাকা ${method} নাম্বার ${number} এ 24 ঘন্টায় পাবেন`);
