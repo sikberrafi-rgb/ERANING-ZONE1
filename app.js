@@ -1,17 +1,46 @@
-// app.js - EarnZone Modular v12
+// app.js - EarnZone Final Version
 
-// Firebase global theke nibo
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
 const auth = window.firebaseAuth;
 const db = window.firebaseDB;
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { doc, setDoc, getDoc, collection, getDocs, query, orderBy, limit, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-// Page show/hide
-function showPage(pageId) {
-    document.querySelectorAll('#dashboardDiv .card').forEach(c => c.classList.add('hidden'));
+// Global function বানানো লাগবে onclick এর জন্য
+window.login = async function() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    if(!email ||!password) return alert('ইমেইল ও পাসওয়ার্ড দিন');
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) { alert(error.message); }
+}
+
+window.signup = async function() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const refer = document.getElementById('referralCode').value;
+    if(!email ||!password) return alert('ইমেইল ও পাসওয়ার্ড দিন');
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = userCredential.user.uid;
+        await setDoc(doc(db, "users", uid), {
+            email: email, balance: 0, referCode: uid.substring(0,6), referredBy: refer || null, createdAt: serverTimestamp()
+        });
+        alert('একাউন্ট তৈরি হয়েছে!');
+    } catch (error) { alert(error.message); }
+}
+
+window.logout = function() { signOut(auth); }
+
+window.showPage = function(pageId) {
+    document.querySelectorAll('#dashboardDiv.card').forEach(c => c.classList.add('hidden'));
     document.getElementById(pageId).classList.remove('hidden');
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+}
+
+window.copyReferCode = function() {
+    navigator.clipboard.writeText(document.getElementById('myReferCode').value);
+    alert('কোড কপি হয়েছে');
 }
 
 // Auth State Check
@@ -26,50 +55,12 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Signup
-async function signup() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const refer = document.getElementById('referralCode').value;
-
-    if(!email || !password) return alert('ইমেইল ও পাসওয়ার্ড দিন');
-    
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const uid = userCredential.user.uid;
-        await setDoc(doc(db, "users", uid), {
-            email: email,
-            balance: 0,
-            referCode: uid.substring(0,6),
-            referredBy: refer || null,
-            createdAt: serverTimestamp()
-        });
-        alert('একাউন্ট তৈরি হয়েছে!');
-    } catch (error) {
-        alert(error.message);
-    }
-}
-
-// Login
-async function login() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        alert(error.message);
-    }
-}
-
-// Logout
-function logout() {
-    signOut(auth);
-}
-
-// User Data Load
 async function loadUserData(uid) {
     const userDoc = await getDoc(doc(db, "users", uid));
     if(userDoc.exists()) {
         const data = userDoc.data();
-        document.getElementById('userName
+        document.getElementById('userName').innerText = data.email.split('@')[0];
+        document.getElementById('userBalance').innerText = data.balance || 0;
+        document.getElementById('myReferCode').value = data.referCode;
+    }
+}
